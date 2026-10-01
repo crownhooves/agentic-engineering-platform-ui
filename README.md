@@ -1,40 +1,379 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Agentic Engineering Platform — UI
 
-## Getting Started
+Next.js frontend for an AI-powered agentic software engineering platform.
 
-First, run the development server:
+The UI provides an execution dashboard for planning, executing, monitoring, validating, and reviewing software-engineering workflows performed by specialized AI agents.
+
+The platform is designed to demonstrate an agentic software development lifecycle where a requirement can be transformed into dependency-aware engineering tasks, executed by specialized agents, validated through compilation and automated tests, assessed for engineering risks, and presented with an auditable execution history.
+
+## Features
+
+* Requirement-driven engineering workflow execution
+* Run creation and execution monitoring
+* Dependency-aware task visualization
+* Specialized agent execution tracking
+* Real-time workflow state updates using Server-Sent Events (SSE)
+* Task status and execution timeline
+* Agent attempts and execution details
+* Engineering evidence and validation results
+* Governance and audit trail
+* Risk assessment visibility
+* Engineering summary
+* Run-level success/failure status
+* API integration with the Spring Boot backend
+
+## Architecture
+
+The UI is intentionally maintained as a separate repository from the backend.
+
+```text
+                         ┌──────────────────────────┐
+                         │        Browser           │
+                         │                          │
+                         │      localhost:3002      │
+                         └────────────┬─────────────┘
+                                      │
+                                      │ HTTP / SSE
+                                      ▼
+                         ┌──────────────────────────┐
+                         │       Next.js UI         │
+                         │                          │
+                         │      Port: 3002          │
+                         └────────────┬─────────────┘
+                                      │
+                                      │ REST API / SSE
+                                      ▼
+                         ┌──────────────────────────┐
+                         │     Spring Boot API      │
+                         │                          │
+                         │      Port: 8088          │
+                         └────────────┬─────────────┘
+                                      │
+                                      │ Spring AI
+                                      ▼
+                         ┌──────────────────────────┐
+                         │       Ollama             │
+                         │                          │
+                         │      Port: 11434         │
+                         │                          │
+                         │   qwen2.5-coder:7b       │
+                         └──────────────────────────┘
+```
+
+## Why port 3002?
+
+The frontend runs on **port 3002** because the Spring Boot backend's CORS configuration allows requests from:
+
+```text
+http://localhost:3002
+```
+
+Therefore, the application should be started on port `3002` during local development.
+
+The frontend API configuration points to:
+
+```text
+http://localhost:8088
+```
+
+## Technology Stack
+
+* Next.js 16
+* React 19
+* TypeScript
+* TanStack Query
+* Server-Sent Events (SSE)
+* CSS Modules
+* Native browser Fetch API
+
+## Prerequisites
+
+Install the following before starting the UI:
+
+* Node.js 22 or later
+* npm
+* Running Agentic Engineering Platform backend
+
+The backend repository is:
+
+```text
+agentic-engineering-platform
+```
+
+The backend must be available at:
+
+```text
+http://localhost:8088
+```
+
+The backend in turn uses a locally running Ollama instance.
+
+## Configuration
+
+Create `.env.local` in the root of the UI project:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8088
+```
+
+`.env.local` is intentionally excluded from Git.
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/crownhooves/agentic-engineering-platform-ui.git
+cd agentic-engineering-platform-ui
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+## Run locally
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3002
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Backend
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+The UI requires the Agentic Engineering Platform backend to be running.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Clone the backend repository separately:
 
-## Learn More
+```bash
+git clone https://github.com/crownhooves/agentic-engineering-platform.git
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the backend using the Ollama profile:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=ollama
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The backend runs on:
 
-## Deploy on Vercel
+```text
+http://localhost:8088
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Ollama
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+The backend uses a locally running Ollama instance.
+
+Install Ollama and make sure the required model is available:
+
+```bash
+ollama pull qwen2.5-coder:7b
+```
+
+Verify:
+
+```bash
+ollama list
+```
+
+The backend expects Ollama at:
+
+```text
+http://localhost:11434
+```
+
+The UI does not communicate directly with Ollama. All AI requests flow through the Spring Boot backend.
+
+## Production build
+
+Build the Next.js application:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm start
+```
+
+The production server listens on port `3000` by default inside the container.
+
+For the Docker configuration included in this repository, port `3000` is exposed by the container and mapped to host port `3002`.
+
+## Docker
+
+Build the image:
+
+```bash
+docker build -t agentic-engineering-platform-ui .
+```
+
+Run the container:
+
+```bash
+docker run --rm \
+  --name agentic-frontend \
+  -p 3002:3000 \
+  agentic-engineering-platform-ui
+```
+
+The UI is then available at:
+
+```text
+http://localhost:3002
+```
+
+The backend remains independently deployable.
+
+## Development Flow
+
+A typical local development environment is:
+
+```text
+Terminal 1
+──────────
+Ollama
+localhost:11434
+        │
+        ▼
+
+Terminal 2
+──────────
+Spring Boot
+localhost:8088
+        │
+        ▼
+
+Terminal 3
+──────────
+Next.js
+localhost:3002
+        │
+        ▼
+
+Browser
+localhost:3002
+```
+
+## Example Workflow
+
+The UI can be used to submit a requirement such as:
+
+```text
+Build a scalable URL shortener service with REST APIs,
+persistence, and analytics.
+```
+
+The agentic backend then coordinates specialized engineering tasks such as:
+
+```text
+Requirement
+     │
+     ▼
+Requirement Analysis
+     │
+     ▼
+Architecture
+     │
+     ├───────────────┐
+     ▼               ▼
+Core Implementation  Analytics
+     │               │
+     ├───────────────┤
+     ▼
+Unit Tests / Integration Tests
+     │
+     ▼
+Build & Test Validation
+     │
+     ▼
+Risk Assessment
+     │
+     ▼
+Engineering Summary
+     │
+     ▼
+Completed Run
+```
+
+The UI exposes the resulting execution state and task timeline.
+
+## Engineering Governance
+
+The dashboard provides visibility into:
+
+* Run state transitions
+* Task dependencies
+* Agent execution
+* Agent attempts and retries
+* Validation results
+* Risk assessment
+* Engineering evidence
+* Audit events
+* Human approval/review states
+
+This provides a traceable view of how an AI-assisted engineering workflow reached its final result.
+
+## Repository Structure
+
+```text
+.
+├── components/
+│   └── UI components
+├── hooks/
+│   └── React hooks
+├── lib/
+│   └── API and client-side utilities
+├── pages/
+│   ├── index.tsx
+│   └── runs/
+│       └── Run dashboard pages
+├── styles/
+│   ├── components.module.css
+│   ├── dashboard.module.css
+│   └── globals.css
+├── Dockerfile
+├── package.json
+├── package-lock.json
+└── tsconfig.json
+```
+
+## Related Repository
+
+Backend:
+
+```text
+https://github.com/crownhooves/agentic-engineering-platform
+```
+
+## Notes
+
+* Ollama runs locally and is not part of the UI container.
+* The UI does not require direct access to Ollama.
+* The backend is responsible for AI model communication.
+* Port `3002` is intentional because it matches the backend CORS configuration.
+* Local environment files and generated Next.js files are excluded from source control.
+
+## Status
+
+This repository represents the frontend of an end-to-end agentic engineering platform prototype with:
+
+* AI-driven engineering workflows
+* Specialized engineering agents
+* Dependency-aware orchestration
+* Parallel task execution
+* Automated validation
+* Risk assessment
+* Governance and audit visibility
+* Real-time execution monitoring
