@@ -1,3 +1,4 @@
+<img width="1618" height="935" alt="Screenshot 2026-10-01 at 1 54 53 PM" src="https://github.com/user-attachments/assets/7d95f624-4785-468a-8b38-7f7fc5e680a3" />
 # Agentic Engineering Platform — UI
 
 Next.js frontend for an AI-powered agentic software engineering platform.
@@ -377,3 +378,16 @@ This repository represents the frontend of an end-to-end agentic engineering pla
 * Risk assessment
 * Governance and audit visibility
 * Real-time execution monitoring
+
+  <img width="1618" height="935" alt="Screenshot 2026-10-01 at 1 54 53 PM" src="https://github.com/user-attachments/assets/2f8501e0-acfe-4fdc-8173-3baab0c2de35" />
+  <img width="1624" height="944" alt="Screenshot 2026-10-01 at 1 35 41 PM" src="https://github.com/user-attachments/assets/5b339f7e-eee2-4140-b2bd-abe1cfafb9bc" />
+
+  <img width="1569" height="902" alt="Screenshot 2026-10-01 at 1 55 48 PM" src="https://github.com/user-attachments/assets/b5e72f74-56b5-4766-ad3c-06f179af8106" />
+
+  <img width="1647" height="939" alt="Screenshot 2026-10-01 at 1 56 05 PM" src="https://github.com/user-attachments/assets/c6033b94-3039-40e3-b2af-453491b7fca0" />
+
+  
+
+
+
+
